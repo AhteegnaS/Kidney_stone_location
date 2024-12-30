@@ -1,0 +1,38 @@
+The final stage of the process involves presenting the results in a format that is useful for
+clinical decision-making.  Visualization: The detected stones are highlighted in the ultrasound image, with annotations
+or bounding boxes marking the stone regions. This visual output helps radiologists and
+clinicians quickly locate and assess kidney stones.  Measurements and Reports: The system can also generate detailed measurements of the
+stone (e.g., size, position, and intensity) and provide automated reports that summarize these
+characteristics. These measurements are crucial for treatment planning, as they determine
+whether intervention is needed and, if so, what approach is most appropriate.
+
+The user selects an image of a kidney using the ‘uigetfile’ function. The image is then
+read into the variable ‘a’ and displayed with the title "Input scanned kidney image."
+Figure 5.3: Original Image
+
+The input image (assumed to be RGB) is converted to grayscale using the rgb2gray
+function. This step simplifies the image and prepares it for further processing. The grayscale
+image is displayed with the title "RGB to Gray converted Image." A contrast adjustment is performed on the grayscale image by applying a threshold (in
+this case, b > 20) to separate foreground objects from the background. The resulting binary
+image is displayed with the title "Adjust the contrast of an image." A flood-fill operation is performed on the binary image using the imfill function to fill
+any holes in the background. This is necessary to ensure that the image is clean and continuous, especially if there are any gaps or noise. The processed image is displayed with the title "flood￾fill operation on background pixels." Small objects in the binary image are removed using the bwareaopen function with a
+threshold of 1000 pixels. This removes noise and irrelevant features that could interfere with the
+stone detection. The cleaned image is displayed with the title "Remove small objects from
+binary image."
+
+The binary image e is used to mask the original RGB image a through element-wise
+multiplication, preserving only the regions that match the binary mask. The result is a
+preprocessed image, which is displayed. The intensity of the image is adjusted using imadjust to enhance certain features in the
+image and make it easier for subsequent analysis. A median filter with a 3x3 window (medfilt2) is applied to reduce noise further. The
+resulting filtered image is displayed. A threshold (p0 > 250) is applied to further isolate potential features of interest (such as
+stones). The binary image p0 is displayed.
+
+A region of interest (ROI) is selected using the roipoly function, which allows the user to
+manually define a polygonal region on the binary image. This helps focus on the area of the
+image where the stone might be located. The polygon is displayed, and the corresponding region
+of the binary image is extracted.
+
+The image within the selected ROI is multiplied by the binary mask p0, isolating the
+region of interest. This is displayed to show the area where the stone might be located. A further clean-up step (bwareaopen) removes small objects that are not of interest. The bwlabel
+function is used to label connected components in the binary image. If at least one component (stone) is detected, a message "Stone is detected" is displayed;
+otherwise, "No stone is detected" is shown.
